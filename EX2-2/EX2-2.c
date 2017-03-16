@@ -110,6 +110,7 @@ polyList multiply2(polyList l1,polyList l2){
 		return tmp1;
 	}else{
 		polyList tmp,ptrTmp;
+		ptrTmp=(polyList)malloc(sizeof(polyList));
 		tmp=(polyList)malloc(sizeof(polyList));
 		tmp->cft=l1->next->cft;
 		tmp->index=l1->next->index;

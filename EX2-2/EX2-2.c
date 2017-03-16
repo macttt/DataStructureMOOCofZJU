@@ -119,7 +119,7 @@ polyList multiply2(polyList l1,polyList l2){
 	} 
 }
 
-//对两个多项式进行加法运算
+//对两个多项式加法运算
 polyList add(polyList l1,polyList l2){			
 	polyList result,tmp,current;
 	result=(polyList)malloc(sizeof(polyList));

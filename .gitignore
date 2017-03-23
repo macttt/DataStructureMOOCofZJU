@@ -3,3 +3,4 @@ forkTest/fork.c
 forkTest/fork.exe
 forkTest/forkTest.dev
 forkTest/forkTest.layout
+forkTest/fork.o

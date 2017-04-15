@@ -13,6 +13,7 @@ typedef ptrtnode tree;
 typedef char ch[2]; 
 int preorder[30];
 int inorder[30];
+int nodecount=0;
 
 //树t的后序遍历 
 void postordertraversal(tree t){
@@ -20,9 +21,9 @@ void postordertraversal(tree t){
 		postordertraversal(t->left);
 		postordertraversal(t->right);
 		if(t->data==preorder[0]){
-			printf("%c",t->data);
+			printf("%d",t->data);
 		}else{
-			printf("%c ",t->data);
+			printf("%d ",t->data);
 		}	
 	}
 }
@@ -51,7 +52,7 @@ char* substring(char *str,int pos,int len){
 
 //读入字符串数组
 void read(int nodecount){
-	int i=0,pre=0,in=0;
+	int i=0,pre=0,in=0,tmpint=0;
 	int stack[32];
 	int stackcount=-1;
 	char tmpstr[7],tmpdata[2];
@@ -67,15 +68,12 @@ void read(int nodecount){
 			stack[++stackcount]=atoi(tmpdata);
 		}
 	}
-	for(i=0;i<nodecount;i++){
-		printf("%d ",preorder[i]);
-	}
 } 
 
 //在字符串中返回某个字符的索引，没有则返回-1
 int find(int source[],int t){
 	int i=0,r=-1;
-	for(i;i<strlen(source);i++){
+	for(i;i<30;i++){
 		if(source[i]==t){
 			r=i;
 			break;
@@ -85,47 +83,51 @@ int find(int source[],int t){
 } 
 
 //根据字符数组建立树
-tree buildTree(int pre[],int in[]){
+tree buildTree(int prehead,int precount,int inhead,int incount){
 	int c=0,index=0,len=0;
-	len=strlen(pre);
-	char *newlpre=malloc(sizeof(char)*len);
-	char *newrpre=malloc(sizeof(char)*len);
-	char *newlin=malloc(sizeof(char)*len);
-	char *newrin=malloc(sizeof(char)*len);
-	tree newnode=(tree)malloc(sizeof(tree));
-	newnode->left=NULL;
-	newnode->right=NULL;
-	if(strlen(pre)==0){
-		free(newlpre);
-		free(newrpre);
-		free(newlin);
-		free(newrin);
+	int prelh=0;
+	int prelcount=0;
+	int prerh=0;
+	int prercount=0;
+	int inlh=0;
+	int inlcount=0;
+	int inrh=0;
+	int inrcount=0;
+	if(precount<=0){
 		return NULL;
+	}else if(precount==1){
+		tree newnode=(tree)malloc(sizeof(tree));
+		newnode->left=NULL;
+		newnode->right=NULL;
+		newnode->data=preorder[prehead];
+		return newnode;	
 	}else{
-		newnode->data=pre[0];
-		index=find(in,pre[0]);
-		newlpre=substring(pre,1,index);//新的左子树先序 
-		newlin=substring(in,0,index);//新的左子树中序
-		strcpy(newrpre,pre+index+1);//新的右子树先序
-		strcpy(newrin,in+index+1);//新的右子树中序
-		newnode->left=buildTree(newlpre,newlin);
-		newnode->right=buildTree(newrpre,newrin); 
-		free(newlpre);
-		free(newrpre);
-		free(newlin);
-		free(newrin);
+		tree newnode=(tree)malloc(sizeof(tree));
+		newnode->left=NULL;
+		newnode->right=NULL;
+		newnode->data=preorder[prehead];
+		index=find(inorder,preorder[prehead]);
+		prelh=prehead+1;
+		prelcount=index-inhead;
+		inlcount=index-inhead;
+		inlh=inhead;
+		prerh=prehead+prelcount+1;
+		prercount=precount-prelcount-1;
+		inrh=index+1;
+		inrcount=inhead+incount-index-1;
+		newnode->left=buildTree(prelh,prelcount,inlh,inlcount);
+		newnode->right=buildTree(prerh,prercount,inrh,inrcount); 
 		return newnode;
 	}
 } 
 
 int main() {
-	int nodecount=0;
 	scanf("%d",&nodecount);
 	read(nodecount);
 	tree root=(tree)malloc(sizeof(tree));
 	root->left=NULL;
 	root->right=NULL;
-	root=buildTree(preorder,inorder);
+	root=buildTree(0,nodecount,0,nodecount);
 	postordertraversal(root);
 	return 0;
 }
